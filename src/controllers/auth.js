@@ -7,8 +7,6 @@ exports.register = async (req, res, next) => {
   try {
     const { name, username, email, password } = req.body;
 
-    //* Validations req body
-
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await users.create({
       name,
@@ -42,8 +40,6 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-
-    //* Validations req body
 
     const user = await users.findByUsername({ username });
 
