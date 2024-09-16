@@ -16,7 +16,6 @@ exports.register = async (req, res, next) => {
       email,
       password: hashedPassword,
     });
-    console.log("user ->", user);
 
     const accessToken = jwt.sign(
       { id: user.id, role: user.role },
@@ -41,7 +40,46 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  //codes
+  try {
+    const { username, password } = req.body;
+
+    //* Validations req body
+
+    const user = await users.findByUsername({ username });
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Invalid username or password",
+      });
+    }
+
+    const verifyPassword = await bcrypt.compare(password, user.password);
+    if (!verifyPassword) {
+      return res.status(401).json({
+        message: "Invalid username or password",
+      });
+    }
+
+    const accessToken = jwt.sign(
+      { id: user.id, role: user.role },
+      config.auth.accessTokenSecret,
+      { expiresIn: config.auth.accessTokenExpiresInSecond + "s" }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user.id, role: user.role },
+      config.auth.resreshTokenSecret,
+      { expiresIn: config.auth.resreshTokenExpiresInSecond + "s" }
+    );
+    const refreshTokenHashed = await bcrypt.hash(refreshToken, 12);
+
+    return res.status(200).json({
+      accessToken,
+      refreshToken: refreshTokenHashed,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 exports.refresh = async (req, res, next) => {
