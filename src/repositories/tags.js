@@ -51,9 +51,22 @@ const remove = async (id) => {
   }
 };
 
+const update = async (id, title) => {
+  try {
+    const query = " UPDATE tags SET title = ? WHERE id = ?";
+
+    await db.execute(query, [title, id]);
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports = {
   create,
   findByTitle,
   findAll,
   remove,
+  update,
 };

@@ -33,3 +33,15 @@ exports.remove = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.update = async (req, res, next) => {
+  try {
+    const { id, title } = req.body;
+
+    await Tag.update(id, title);
+
+    return res.json({ msg: "Tag updated successfully" });
+  } catch (err) {
+    next(err);
+  }
+};

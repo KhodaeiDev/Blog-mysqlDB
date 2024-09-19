@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.route("/").get(controller.getAll).post(auth, isAdmin, controller.create);
 router.route("/remove/:id").delete(auth, isAdmin, controller.remove);
+router.route("/update").put(controller.update);
 
 module.exports = router;
