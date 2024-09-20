@@ -13,7 +13,7 @@ exports.multerStorage = (destination, allowedTypes = /jpg|png|jpeg/) => {
     },
     filename: function (req, file, cb) {
       const extname = path.extname(file.originalname);
-      const filename = file.originalname + Date.now();
+      const filename = Date.now() * Math.floor(Math.random() * 9999);
       cb(null, `${filename}${extname}`);
     },
   });
