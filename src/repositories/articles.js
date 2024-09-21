@@ -12,16 +12,18 @@ const create = async ({ title, content, slug, author_id, cover }) => {
     cover,
   ]);
 
-  const mainArticles = await db.execute("SELECT * FROM articles WHERE id = ?", [
-    insertedArticle.insertId,
-  ]);
+  const [mainArticles] = await db.execute(
+    "SELECT * FROM articles WHERE id = ?",
+    [insertedArticle.insertId]
+  );
 
-  return mainArticles;
+  return mainArticles[0];
 };
 
 const addTag = async (articleId, tagId) => {
   try {
-    const query = "INSERT INTO articles_tags VALUES (?, ?)";
+    const query =
+      "INSERT INTO articles_tags( article_id, tag_id ) VALUES (?, ?)";
 
     await db.execute(query, [articleId, tagId]);
 

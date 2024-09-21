@@ -1,5 +1,5 @@
 const slugify = require("slugify");
-const articles = require("./../repositories/articles");
+const Articles = require("./../repositories/articles");
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -11,16 +11,26 @@ exports.getAll = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    let { title, content, slug, author_id, cover = null } = req.body;
+    let { title, content, slug, author_id, cover = null, tagsId } = req.body;
 
     author_id = req.user.id;
     slug = slugify(slug, { lower: true });
 
-    if (req.file.filename) {
+    if (req.file?.filename) {
       cover = req.file.filename;
     }
 
-    await articles.create({ title, content, slug, author_id, cover });
+    const article = await Articles.create({
+      title,
+      content,
+      slug,
+      author_id,
+      cover,
+    });
+
+    tagsId?.forEach(async (tagId) => {
+      await Articles.addTag(article.id, Number(tagId));
+    });
 
     return res.status(201).json("Article created successfully");
   } catch (err) {
