@@ -44,8 +44,32 @@ const deleteOne = async (id) => {
   }
 };
 
+const findTagArticles = async (tagId) => {
+  const query = `SELECT
+  articles.title,
+  articles.content,
+  articles.slug,
+  articles.cover,
+  articles.created_at,
+  users.name AS author,
+  tags.title AS tag
+  FROM articles_tags
+  JOIN articles ON
+  articles_tags.article_id = articles.id
+  JOIN users ON
+  users.id = articles.author_id
+  JOIN tags ON
+  articles_tags.tag_id = tags.id
+  WHERE tag_id = ?;`;
+
+  const [articles] = await db.execute(query, [tagId]);
+
+  return articles;
+};
+
 module.exports = {
   create,
   addTag,
   deleteOne,
+  findTagArticles,
 };

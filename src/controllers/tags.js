@@ -1,4 +1,5 @@
 const Tag = require("./../repositories/tags");
+const Article = require("./../repositories/articles");
 
 exports.getAll = async (req, res, next) => {
   try {
