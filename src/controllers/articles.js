@@ -1,6 +1,7 @@
 const slugify = require("slugify");
 const Articles = require("./../repositories/articles");
 const Tag = require("./../repositories/tags");
+const { calculateRelativeTimeDifference } = require("../uilts/funcs");
 
 exports.getAll = async (req, res, next) => {
   try {
@@ -52,6 +53,10 @@ exports.getBySlug = async (req, res, next) => {
     if (articles.length < 1) {
       return res.status(400).json("There are no articles for this tag");
     }
+
+    articles.forEach((article) => {
+      article.created_at = calculateRelativeTimeDifference(article.created_at);
+    });
 
     return res.json(articles);
   } catch (err) {
