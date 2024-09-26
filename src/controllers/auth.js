@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const users = require("./../repositories/user");
 const bcrypt = require("bcryptjs");
 const config = require("../config");
+const svgCaptcha = require("svg-captcha");
 
 exports.register = async (req, res, next) => {
   try {
@@ -88,4 +89,14 @@ exports.getMe = async (req, res, next) => {
 
 exports.logOut = async (req, res, next) => {
   //codes
+};
+
+exports.getcaptcha = (req, res) => {
+  const captcha = svgCaptcha.create({
+    color: true,
+    size: 4,
+    noise: 3,
+  });
+
+  return res.json({ captcha: captcha.data });
 };

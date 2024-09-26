@@ -10,5 +10,6 @@ router.route("/login").post(validator(loginSchema), controller.login);
 router.route("/refresh").post(controller.refresh);
 router.route("/me").post(controller.getMe);
 router.route("/loguot").post(controller.logOut);
+router.route("/captcha").get(controller.getcaptcha);
 
 module.exports = router;
