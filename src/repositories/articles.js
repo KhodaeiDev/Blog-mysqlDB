@@ -67,9 +67,38 @@ const findTagArticles = async (tagId) => {
   return articles;
 };
 
+const searchInArticles = async (searchValue) => {
+  const query = `SELECT
+  articles.id,
+  articles.title,
+  articles.content,
+  articles.slug,
+  articles.cover,
+  users.name AS author,
+  tags.title AS tag
+  FROM articles
+  JOIN articles_tags ON
+  articles_tags.article_id = articles.id
+  JOIN tags ON
+  articles_tags.tag_id = tags.id
+  JOIN users ON
+  users.id = articles.author_id
+  WHERE articles.title LIKE ? OR content LIKE ? OR tags.title = ?
+  GROUP BY articles.id;`;
+
+  const [articles] = await db.execute(query, [
+    `%${searchValue}%`,
+    `%${searchValue}%`,
+    `%${searchValue}%`,
+  ]);
+
+  return articles;
+};
+
 module.exports = {
   create,
   addTag,
   deleteOne,
   findTagArticles,
+  searchInArticles,
 };

@@ -71,3 +71,14 @@ exports.remove = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.search = async (req, res) => {
+  const searchValue = req.query.value;
+
+  const articles = await Articles.searchInArticles(searchValue);
+  if (articles.length < 1) {
+    res.status(404).json("Articles Not Found");
+  }
+
+  return res.json(articles);
+};
